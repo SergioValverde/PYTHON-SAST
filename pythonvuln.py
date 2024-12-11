@@ -28,11 +28,39 @@ def sensitive_data_exposure():
     credentials = base64.b64encode(b"username:password").decode()
     return credentials
 
+def unsafe_deserialization(serialized_data):
+    # Vulnerabilidad 5: Unsafe Deserialization
+    # Esta vulnerabilidad permite la ejecución remota de código
+    # Un atacante puede craftar datos serializados maliciosos
+    try:
+        # Usando pickle, que es extremadamente peligroso
+        obj = pickle.loads(serialized_data)
+        
+        # Otro ejemplo con marshal
+        # obj = marshal.loads(serialized_data)
+        
+        return obj
+    except Exception as e:
+        print(f"Error en deserialización: {e}")
+
 def main():
+    # Ejemplo de uso de la vulnerabilidad de deserialización insegura
+    # Este código es solo para demostración
+    class MaliciousClass:
+        def __reduce__(self):
+            # Este método permite ejecutar código arbitrario durante la deserialización
+            return (os.system, ('echo HACKED >> /tmp/pwned.txt',))
+
+    # Serializar un objeto potencialmente malicioso
+    malicious_payload = pickle.dumps(MaliciousClass())
+    
+    # Simular deserialización insegura
+    unsafe_deserialization(malicious_payload)
+
+    # Otras llamadas a funciones vulnerables para demostración
     vulnerable_sql_injection("admin' OR 1=1 --")
     command_injection("localhost; rm -rf /")
     print(weak_random_generation())
-    print(sensitive_data_exposure())
 
 if __name__ == "__main__":
     main()
