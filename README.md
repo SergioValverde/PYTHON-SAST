@@ -8,4 +8,4 @@ Este proyecto contiene ejemplos de vulnerabilidades comunes de seguridad para an
 2. SQL Injection
 3. Insecure Deserialization
 4. Sensitive Data Exposure
-5. Weak Cryptography
+    # Vulnerabilidad 5: Unsafe Deserialization
